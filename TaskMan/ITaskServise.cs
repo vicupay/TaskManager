@@ -7,9 +7,5 @@ namespace TaskMan
     interface ITaskServise
     {
         public void RunTask();
-
-              
-
-
     }
 }

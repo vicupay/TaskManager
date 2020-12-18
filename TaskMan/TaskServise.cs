@@ -62,27 +62,37 @@ namespace TaskMan
         //метод ввода и проверки Id задачи, возвращает индекс элемента в списке и его ID
         private int EnterId(List<Plans> plans, out int id)
         {
-            int index = 0;
+            int index = -1;
             bool idTry;
             bool idContain = false;
             string position;
+            id = -1;
             do
             {
-                Console.WriteLine("Enter ID ");
+                Console.WriteLine("Enter ID or type 'cancel'");
                 position = Console.ReadLine();
-                idTry = Int32.TryParse(position, out id);
-                if (idTry == true)
+                if (position == "cancel")
                 {
-                    index = 0;
-                    foreach (var item in plans)
-                    {
-                        if (item.TaskId == id)
-                        {
-                            idContain = true;
+                    idTry = true;
+                    idContain = true;
 
-                            break;
+                }
+                else
+                {
+                    idTry = Int32.TryParse(position, out id);
+                    if (idTry == true)
+                    {
+                        index = 0;
+                        foreach (var item in plans)
+                        {
+                            if (item.TaskId == id)
+                            {
+                                idContain = true;
+
+                                break;
+                            }
+                            index++;
                         }
-                        index++;
                     }
                 }
             }
@@ -180,8 +190,11 @@ namespace TaskMan
         {
             Console.WriteLine("Delete Task");
             int posi = EnterId(plans, out int idCurrent);
-            plans.RemoveAt(posi);
-            Console.WriteLine("Task ID {0} Deleted", idCurrent);
+            if (posi != -1)
+            {
+                plans.RemoveAt(posi);
+                Console.WriteLine("Task ID {0} Deleted", idCurrent);
+            }
         }
 
 
@@ -190,31 +203,34 @@ namespace TaskMan
         {
             int index = EnterId(plans, out int idCurrent);
 
-            Console.WriteLine("Change Task ID {0}", idCurrent);
-            Console.WriteLine("date---{0}", plans[index].TaskDate.ToShortDateString());
-            Console.WriteLine("task---{0}", plans[index].Task);
-            Console.WriteLine("status-{0}", plans[index].Status());
-
-            var temp = plans[index].TaskDate;
-            plans[index].TaskDate = EnterDate(plans[index].TaskDate);
-            Console.WriteLine("Current date--{0}", plans[index].TaskDate.ToShortDateString());
-           
-            Console.WriteLine("Enter new Task");
-            string taskString = Console.ReadLine();
-            if (String.IsNullOrWhiteSpace(taskString)) Console.WriteLine("You left empty space. Changes have not done");
-            else plans[index].Task = taskString;
-            Console.WriteLine("Current task--{0}", plans[index].Task);
-            
-            Console.WriteLine("Press 'Enter' if you want leave Status without changes");
-            Console.WriteLine("Write 'done' if the Task is finished, other answer means 'have not done'");
-            string change = Console.ReadLine();
-            if (String.IsNullOrEmpty(change) != true)
+            if (index != -1)
             {
-                if (change == "done") plans[index].HaveDone = true;
-                else plans[index].HaveDone = false;
+                Console.WriteLine("Change Task ID {0}", idCurrent);
+                Console.WriteLine("date---{0}", plans[index].TaskDate.ToShortDateString());
+                Console.WriteLine("task---{0}", plans[index].Task);
+                Console.WriteLine("status-{0}", plans[index].Status());
+
+                var temp = plans[index].TaskDate;
+                plans[index].TaskDate = EnterDate(plans[index].TaskDate);
+                Console.WriteLine("Current date--{0}", plans[index].TaskDate.ToShortDateString());
+
+                Console.WriteLine("Enter new Task");
+                string taskString = Console.ReadLine();
+                if (String.IsNullOrWhiteSpace(taskString)) Console.WriteLine("You left empty space. Changes have not done");
+                else plans[index].Task = taskString;
+                Console.WriteLine("Current task--{0}", plans[index].Task);
+
+                Console.WriteLine("Press 'Enter' if you want leave Status without changes");
+                Console.WriteLine("Write 'done' if the Task is finished, other answer means 'have not done'");
+                string change = Console.ReadLine();
+                if (String.IsNullOrEmpty(change) != true)
+                {
+                    if (change == "done") plans[index].HaveDone = true;
+                    else plans[index].HaveDone = false;
+                }
+                Console.WriteLine("Current status--{0}", plans[index].Status());
+                if (plans[index].TaskDate != temp) SortPlans(plans);
             }
-            Console.WriteLine("Current status--{0}", plans[index].Status());
-            if (plans[index].TaskDate != temp) SortPlans(plans);
         }
     }
 }

@@ -17,10 +17,10 @@ namespace TaskMan
             {
                 //наполняем список
                 new Plans{Task ="To do Request for courses", TaskDate = Convert.ToDateTime("2020.11.18")},
-                new Plans{Task="To send the link",TaskDate=Convert.ToDateTime("2020.12.17"), HaveDone=true},
+                new Plans{Task="To send the link",TaskDate=Convert.ToDateTime("2020.12.18"), HaveDone=true},
                 new Plans{Task="To begin learning", TaskDate=Convert.ToDateTime("2021.01.18")},
                 new Plans{Task="To start working as a developer", TaskDate=Convert.ToDateTime("2021.06.01")},
-                new Plans{Task = "To do the test",TaskDate=Convert.ToDateTime("2020.12.20"), HaveDone=true}
+                new Plans{Task ="To do the test",TaskDate=Convert.ToDateTime("2020.12.20"), HaveDone=true}
             };
             //Выводим на экран список дел                       
             ShowTasks(tasks);
@@ -57,10 +57,10 @@ namespace TaskMan
             }
             while (true);
         }
-    
-        
+
+
         //метод ввода и проверки Id задачи, возвращает индекс элемента в списке и его ID
-        public int EnterId(List<Plans> plans, out int id)
+        private int EnterId(List<Plans> plans, out int id)
         {
             int index = 0;
             bool idTry;
@@ -110,7 +110,7 @@ namespace TaskMan
             return setDay;
         }
         //Метод добавления нового элемента
-        public void Add(List<Plans> tasks)
+        private void Add(List<Plans> tasks)
         {
             Console.WriteLine("Create Task. Enter the task");
             string taskString = Console.ReadLine();
@@ -136,7 +136,7 @@ namespace TaskMan
                     if (dateTemp < item.TaskDate)
                     {
                         tasks.Insert(tasks.IndexOf(item), task);
-                        Console.WriteLine("New Task is created. ID {0}", item.TaskId);
+                        Console.WriteLine("New Task is created. ID {0}", task.TaskId);
                         break;
                     }
                 }
@@ -144,21 +144,18 @@ namespace TaskMan
             else
             {
                 tasks.Add(task);
-                Console.WriteLine("New Task is created. ID {0}", tasks[tasks.Count - 1].TaskId);
+                Console.WriteLine("New Task is created. ID {0}", task.TaskId);
             }
         }
 
 
         //метод выводит на экран список задач
-        public void ShowTasks(List<Plans> plans)
+        private void ShowTasks(List<Plans> plans)
         {
-            //DateTime today = DateTime.Today;
-            int pos;
             foreach (var item in plans)
             {
                 string status = item.Status();
-                pos = plans.IndexOf(item) + 1;
-                Console.WriteLine("{0}-{1}-{2}---{3}", item.TaskId, item.TaskDate.ToShortDateString(), status, item.Task);
+                Console.WriteLine("ID-{0}-{1}-{2}---{3}", item.TaskId, item.TaskDate.ToShortDateString(), status, item.Task);
             }
             Console.WriteLine(new string('-', 45));
         }
@@ -172,22 +169,24 @@ namespace TaskMan
 
 
         //сортировака коллекции
-        public void SortPlans(List<Plans> plans)
+        private void SortPlans(List<Plans> plans)
         {
             plans.Sort(CompareDates);
         }
-        //удаление задачи
-        public void DeleteTask(List<Plans> plans)
-        {
 
+
+        //удаление задачи
+        private void DeleteTask(List<Plans> plans)
+        {
             Console.WriteLine("Delete Task");
-            int idCurrent;
-            int posi = EnterId(plans, out idCurrent);
+            int posi = EnterId(plans, out int idCurrent);
             plans.RemoveAt(posi);
-            Console.WriteLine("Task {0} Deleted", idCurrent);
+            Console.WriteLine("Task ID {0} Deleted", idCurrent);
         }
+
+
         //Изменение задачи
-        public void ChangeTask(List<Plans> plans)
+        private void ChangeTask(List<Plans> plans)
         {
             int index = EnterId(plans, out int idCurrent);
 
@@ -199,11 +198,13 @@ namespace TaskMan
             var temp = plans[index].TaskDate;
             plans[index].TaskDate = EnterDate(plans[index].TaskDate);
             Console.WriteLine("Current date--{0}", plans[index].TaskDate.ToShortDateString());
+           
             Console.WriteLine("Enter new Task");
             string taskString = Console.ReadLine();
             if (String.IsNullOrWhiteSpace(taskString)) Console.WriteLine("You left empty space. Changes have not done");
             else plans[index].Task = taskString;
             Console.WriteLine("Current task--{0}", plans[index].Task);
+            
             Console.WriteLine("Press 'Enter' if you want leave Status without changes");
             Console.WriteLine("Write 'done' if the Task is finished, other answer means 'have not done'");
             string change = Console.ReadLine();

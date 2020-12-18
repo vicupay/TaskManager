@@ -5,7 +5,7 @@ namespace TaskMan
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             ITaskServise taskServise = new TaskServise();
             taskServise.RunTask();

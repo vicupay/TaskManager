@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace TaskMan
 {
@@ -107,14 +108,19 @@ namespace TaskMan
             bool dayError;
             do
             {
-                Console.WriteLine("Enter the real date in format dd.mm.yyyy or press 'Enter' if you want leave Date without changes");
+                Console.WriteLine("Enter the real date in format dd.mm.yyyy or press 'Enter' if you want to leave Date without changes");
                 string day = Console.ReadLine();
+                dayError = DateTime.TryParse(day, out setDay);
                 if (String.IsNullOrEmpty(day))
                 {
                     setDay = currentDay;
                     dayError = true;
                 }
-                else dayError = DateTime.TryParse(day, out setDay);
+                else if (dayError && setDay < DateTime.Today)
+                {
+                    dayError = false;
+                    Console.WriteLine("The Date is in the past");
+                }
             }
             while (dayError == false);
             return setDay;

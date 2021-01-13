@@ -152,7 +152,7 @@ namespace TaskMan
                     if (dateTemp < item.TaskDate)
                     {
                         tasks.Insert(tasks.IndexOf(item), task);
-                        Console.WriteLine("New Task is created. ID {0}", task.TaskId);
+                        //Console.WriteLine("New Task is created. ID {0}", task.TaskId);
                         break;
                     }
                 }
@@ -160,8 +160,10 @@ namespace TaskMan
             else
             {
                 tasks.Add(task);
-                Console.WriteLine("New Task is created. ID {0}", task.TaskId);
+                //Console.WriteLine("New Task is created. ID {0}", task.TaskId);
             }
+            Console.WriteLine("New Task is created. ID {0}", task.TaskId);
+
         }
 
 
